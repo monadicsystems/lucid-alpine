@@ -107,10 +107,10 @@ xTransition_
   -> [Text]     -- ^ List of x-transition modifiers
   -> Text
   -> Attribute
-xTransition_ Nothing [] _ = makeAttribute "data-x-transition" mempty -- ^ No directive or modifiers
-xTransition_ (Just dir) [] attrVal = makeAttribute ("data-x-transition:" <> dir) attrVal -- ^ Directive with custom transition classes
-xTransition_ Nothing mods _ = makeAttribute ("data-x-transition." <> intercalate "." mods) mempty -- ^ No directive, but with modifiers
-xTransition_ (Just dir) mods _ = makeAttribute ("data-x-transition:" <> dir <> "." <> intercalate "." mods) mempty -- ^ Directive with modifiers
+xTransition_ Nothing [] _ = makeAttribute "data-x-transition" mempty -- No directive or modifiers
+xTransition_ (Just dir) [] attrVal = makeAttribute ("data-x-transition:" <> dir) attrVal -- Directive with custom transition classes
+xTransition_ Nothing mods _ = makeAttribute ("data-x-transition." <> intercalate "." mods) mempty -- No directive, but with modifiers
+xTransition_ (Just dir) mods _ = makeAttribute ("data-x-transition:" <> dir <> "." <> intercalate "." mods) mempty -- Directive with modifiers
 
 {-
 <div x-show="open" x-transition>

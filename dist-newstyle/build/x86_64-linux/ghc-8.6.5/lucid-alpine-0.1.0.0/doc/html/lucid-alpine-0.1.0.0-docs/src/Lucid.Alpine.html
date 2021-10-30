@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE OverloadedStrings #-}</span><span>
+</span><a name="line-2"></a><span class="hs-pragma">{-# LANGUAGE LambdaCase #-}</span><span>
+</span><a name="line-3"></a><span>
+</span><a name="line-4"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Lucid.Alpine</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-5"></a><span>
+</span><a name="line-6"></a><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Data.Text</span><span>
+</span><a name="line-7"></a><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Lucid.Base</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Attribute</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span class="hs-special">)</span><span>
+</span><a name="line-8"></a><span>
+</span><a name="line-9"></a><span class="hs-comment">-- | x-data</span><span>
+</span><a name="line-10"></a><span class="hs-comment">-- Declare a new Alpine component and its data for a block of HTML</span><span>
+</span><a name="line-11"></a><span class="hs-identifier">xData_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Maybe</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-12"></a><a name="xData_"><a href="Lucid.Alpine.html#xData_"><span class="hs-identifier">xData_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><a name="line-13"></a><span>  </span><span class="hs-identifier hs-var">Nothing</span><span>     </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-data&quot;</span><span> </span><span class="hs-identifier hs-var">mempty</span><span>
+</span><a name="line-14"></a><span>  </span><span class="hs-identifier hs-var">Just</span><span> </span><a name="local-6989586621679014407"><a href="#local-6989586621679014407"><span class="hs-identifier">object</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-data&quot;</span><span> </span><a href="#local-6989586621679014407"><span class="hs-identifier hs-var">object</span></a><span>
+</span><a name="line-15"></a><span>
+</span><a name="line-16"></a><span class="hs-comment">{-
+&lt;div x-data=&quot;{ open: false }&quot;&gt;
+    ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-21"></a><span>
+</span><a name="line-22"></a><span class="hs-comment">-- | x-bind</span><span>
+</span><a name="line-23"></a><span class="hs-comment">-- Dynamically set HTML attributes on an element</span><span>
+</span><a name="line-24"></a><span class="hs-identifier">xBind_</span><span>
+</span><a name="line-25"></a><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-comment">-- ^ Attribute name</span><span>
+</span><a name="line-26"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Text</span><span>
+</span><a name="line-27"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-28"></a><a name="xBind_"><a href="Lucid.Alpine.html#xBind_"><span class="hs-identifier">xBind_</span></a></a><span> </span><a name="local-6989586621679014408"><a href="#local-6989586621679014408"><span class="hs-identifier">attr</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-bind:&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><a href="#local-6989586621679014408"><span class="hs-identifier hs-var">attr</span></a><span class="hs-special">)</span><span>
+</span><a name="line-29"></a><span>
+</span><a name="line-30"></a><span class="hs-comment">{-
+&lt;div x-bind:class=&quot;! open ? 'hidden' : ''&quot;&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-35"></a><span>
+</span><a name="line-36"></a><span class="hs-comment">-- | x-on</span><span>
+</span><a name="line-37"></a><span class="hs-comment">-- Listen for browser events on an element</span><span>
+</span><a name="line-38"></a><span class="hs-identifier">xOn_</span><span>
+</span><a name="line-39"></a><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-comment">-- ^ Event name</span><span>
+</span><a name="line-40"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Text</span><span>
+</span><a name="line-41"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-42"></a><a name="xOn_"><a href="Lucid.Alpine.html#xOn_"><span class="hs-identifier">xOn_</span></a></a><span> </span><a name="local-6989586621679014409"><a href="#local-6989586621679014409"><span class="hs-identifier">event</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-on:&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><a href="#local-6989586621679014409"><span class="hs-identifier hs-var">event</span></a><span class="hs-special">)</span><span>
+</span><a name="line-43"></a><span>
+</span><a name="line-44"></a><span class="hs-comment">{-
+&lt;button x-on:click=&quot;open = ! open&quot;&gt;
+  Toggle
+&lt;/button&gt;
+-}</span><span>
+</span><a name="line-49"></a><span>
+</span><a name="line-50"></a><span class="hs-comment">-- | x-text</span><span>
+</span><a name="line-51"></a><span class="hs-comment">-- Set the text content of an element</span><span>
+</span><a name="line-52"></a><span class="hs-identifier">xText_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-53"></a><a name="xText_"><a href="Lucid.Alpine.html#xText_"><span class="hs-identifier">xText_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-text&quot;</span><span>
+</span><a name="line-54"></a><span>
+</span><a name="line-55"></a><span class="hs-comment">{-
+&lt;div&gt;
+  Copyright &#169;
+
+  &lt;span x-text=&quot;new Date().getFullYear()&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-62"></a><span>
+</span><a name="line-63"></a><span class="hs-comment">-- | x-html</span><span>
+</span><a name="line-64"></a><span class="hs-comment">-- Set the inner HTML of an element</span><span>
+</span><a name="line-65"></a><span class="hs-identifier">xHtml_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-66"></a><a name="xHtml_"><a href="Lucid.Alpine.html#xHtml_"><span class="hs-identifier">xHtml_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-html&quot;</span><span>
+</span><a name="line-67"></a><span>
+</span><a name="line-68"></a><span class="hs-comment">{-
+&lt;div x-html=&quot;(await axios.get('/some/html/partial')).data&quot;&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-73"></a><span>
+</span><a name="line-74"></a><span class="hs-comment">-- | x-model</span><span>
+</span><a name="line-75"></a><span class="hs-comment">-- Synchronize a piece of data with an input element</span><span>
+</span><a name="line-76"></a><span class="hs-identifier">xModel_</span><span>
+</span><a name="line-77"></a><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-identifier hs-type">Text</span><span class="hs-special">]</span><span> </span><span class="hs-comment">-- ^ List of x-model modifiers</span><span>
+</span><a name="line-78"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Text</span><span>
+</span><a name="line-79"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-80"></a><a name="xModel_"><a href="Lucid.Alpine.html#xModel_"><span class="hs-identifier">xModel_</span></a></a><span> </span><a name="local-6989586621679014410"><a href="#local-6989586621679014410"><span class="hs-identifier">mods</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><a href="#local-6989586621679014410"><span class="hs-identifier hs-var">mods</span></a><span> </span><span class="hs-keyword">of</span><span>
+</span><a name="line-81"></a><span>  </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-model&quot;</span><span>
+</span><a name="line-82"></a><span>  </span><span class="hs-identifier">_</span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-model.&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><span class="hs-identifier hs-var">intercalate</span><span> </span><span class="hs-string">&quot;.&quot;</span><span> </span><a href="#local-6989586621679014410"><span class="hs-identifier hs-var">mods</span></a><span class="hs-special">)</span><span>
+</span><a name="line-83"></a><span>
+</span><a name="line-84"></a><span class="hs-comment">{-
+&lt;div x-data=&quot;{ search: '' }&quot;&gt;
+  &lt;input type=&quot;text&quot; x-model=&quot;search&quot;&gt;
+ 
+  Searching for: &lt;span x-text=&quot;search&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-91"></a><span>
+</span><a name="line-92"></a><span class="hs-comment">-- | x-show</span><span>
+</span><a name="line-93"></a><span class="hs-comment">-- Toggle the visibility of an element</span><span>
+</span><a name="line-94"></a><span class="hs-identifier">xShow_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-95"></a><a name="xShow_"><a href="Lucid.Alpine.html#xShow_"><span class="hs-identifier">xShow_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-show&quot;</span><span>
+</span><a name="line-96"></a><span>
+</span><a name="line-97"></a><span class="hs-comment">{-
+&lt;div x-show=&quot;open&quot;&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-102"></a><span>
+</span><a name="line-103"></a><span class="hs-comment">-- | x-transition</span><span>
+</span><a name="line-104"></a><span class="hs-comment">-- Transition an element in and out using CSS transitions</span><span>
+</span><a name="line-105"></a><span class="hs-identifier">xTransition_</span><span>
+</span><a name="line-106"></a><span>  </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Maybe</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-comment">-- ^ Transition directive</span><span>
+</span><a name="line-107"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="hs-identifier hs-type">Text</span><span class="hs-special">]</span><span>     </span><span class="hs-comment">-- ^ List of x-transition modifiers</span><span>
+</span><a name="line-108"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Text</span><span>
+</span><a name="line-109"></a><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-110"></a><a name="xTransition_"><a href="Lucid.Alpine.html#xTransition_"><span class="hs-identifier">xTransition_</span></a></a><span> </span><span class="hs-identifier hs-var">Nothing</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-transition&quot;</span><span> </span><span class="hs-identifier hs-var">mempty</span><span> </span><span class="hs-comment">-- No directive or modifiers</span><span>
+</span><a name="line-111"></a><span class="hs-identifier">xTransition_</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-var">Just</span><span> </span><a name="local-6989586621679014411"><a href="#local-6989586621679014411"><span class="hs-identifier">dir</span></a></a><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><a name="local-6989586621679014412"><a href="#local-6989586621679014412"><span class="hs-identifier">attrVal</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-transition:&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><a href="#local-6989586621679014411"><span class="hs-identifier hs-var">dir</span></a><span class="hs-special">)</span><span> </span><a href="#local-6989586621679014412"><span class="hs-identifier hs-var">attrVal</span></a><span> </span><span class="hs-comment">-- Directive with custom transition classes</span><span>
+</span><a name="line-112"></a><span class="hs-identifier">xTransition_</span><span> </span><span class="hs-identifier hs-var">Nothing</span><span> </span><a name="local-6989586621679014413"><a href="#local-6989586621679014413"><span class="hs-identifier">mods</span></a></a><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-transition.&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><span class="hs-identifier hs-var">intercalate</span><span> </span><span class="hs-string">&quot;.&quot;</span><span> </span><a href="#local-6989586621679014413"><span class="hs-identifier hs-var">mods</span></a><span class="hs-special">)</span><span> </span><span class="hs-identifier hs-var">mempty</span><span> </span><span class="hs-comment">-- No directive, but with modifiers</span><span>
+</span><a name="line-113"></a><span class="hs-identifier">xTransition_</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-var">Just</span><span> </span><a name="local-6989586621679014414"><a href="#local-6989586621679014414"><span class="hs-identifier">dir</span></a></a><span class="hs-special">)</span><span> </span><a name="local-6989586621679014415"><a href="#local-6989586621679014415"><span class="hs-identifier">mods</span></a></a><span> </span><span class="hs-identifier">_</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-special">(</span><span class="hs-string">&quot;data-x-transition:&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><a href="#local-6989586621679014414"><span class="hs-identifier hs-var">dir</span></a><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><span class="hs-string">&quot;.&quot;</span><span> </span><span class="hs-operator hs-var">&lt;&gt;</span><span> </span><span class="hs-identifier hs-var">intercalate</span><span> </span><span class="hs-string">&quot;.&quot;</span><span> </span><a href="#local-6989586621679014415"><span class="hs-identifier hs-var">mods</span></a><span class="hs-special">)</span><span> </span><span class="hs-identifier hs-var">mempty</span><span> </span><span class="hs-comment">-- Directive with modifiers</span><span>
+</span><a name="line-114"></a><span>
+</span><a name="line-115"></a><span class="hs-comment">{-
+&lt;div x-show=&quot;open&quot; x-transition&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-120"></a><span>
+</span><a name="line-121"></a><span class="hs-comment">-- | x-for</span><span>
+</span><a name="line-122"></a><span class="hs-comment">-- Repeat a block of HTML based on a data set</span><span>
+</span><a name="line-123"></a><span class="hs-identifier">xFor_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-124"></a><a name="xFor_"><a href="Lucid.Alpine.html#xFor_"><span class="hs-identifier">xFor_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-for&quot;</span><span>
+</span><a name="line-125"></a><span>
+</span><a name="line-126"></a><span class="hs-identifier">xForKey_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-127"></a><a name="xForKey_"><a href="Lucid.Alpine.html#xForKey_"><span class="hs-identifier">xForKey_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;:key&quot;</span><span>
+</span><a name="line-128"></a><span>
+</span><a name="line-129"></a><span class="hs-comment">{-
+&lt;template x-for=&quot;post in posts&quot;&gt;
+  &lt;h2 x-text=&quot;post.title&quot;&gt;&lt;/h2&gt;
+&lt;/template&gt;
+-}</span><span>
+</span><a name="line-134"></a><span>
+</span><a name="line-135"></a><span class="hs-comment">-- | x-if</span><span>
+</span><a name="line-136"></a><span class="hs-comment">-- Conditionally add/remove a block of HTML from the page entirely.</span><span>
+</span><a name="line-137"></a><span class="hs-identifier">xIf_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-138"></a><a name="xIf_"><a href="Lucid.Alpine.html#xIf_"><span class="hs-identifier">xIf_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-if&quot;</span><span>
+</span><a name="line-139"></a><span>
+</span><a name="line-140"></a><span class="hs-comment">{-
+&lt;template x-if=&quot;open&quot;&gt;
+  &lt;div&gt;...&lt;/div&gt;
+&lt;/template&gt;
+-}</span><span>
+</span><a name="line-145"></a><span>
+</span><a name="line-146"></a><span class="hs-comment">-- | x-init</span><span>
+</span><a name="line-147"></a><span class="hs-comment">-- Run code when an element is initialized by Alpine</span><span>
+</span><a name="line-148"></a><span class="hs-identifier">xInit_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-149"></a><a name="xInit_"><a href="Lucid.Alpine.html#xInit_"><span class="hs-identifier">xInit_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-init&quot;</span><span>
+</span><a name="line-150"></a><span>
+</span><a name="line-151"></a><span class="hs-comment">{-
+&lt;div x-init=&quot;date = new Date()&quot;&gt;&lt;/div&gt;
+-}</span><span>
+</span><a name="line-154"></a><span>
+</span><a name="line-155"></a><span class="hs-comment">-- | x-effect</span><span>
+</span><a name="line-156"></a><span class="hs-comment">-- Execute a script each time one of its dependancies change</span><span>
+</span><a name="line-157"></a><span class="hs-identifier">xEffect_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-158"></a><a name="xEffect_"><a href="Lucid.Alpine.html#xEffect_"><span class="hs-identifier">xEffect_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-effect&quot;</span><span>
+</span><a name="line-159"></a><span>
+</span><a name="line-160"></a><span class="hs-comment">{-
+&lt;div x-effect=&quot;console.log('Count is '+count)&quot;&gt;&lt;/div&gt;
+-}</span><span>
+</span><a name="line-163"></a><span>
+</span><a name="line-164"></a><span class="hs-comment">-- | x-ref</span><span>
+</span><a name="line-165"></a><span class="hs-comment">-- Reference elements directly by their specified keys using the $refs magic property</span><span>
+</span><a name="line-166"></a><span class="hs-identifier">xRef_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Text</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-167"></a><a name="xRef_"><a href="Lucid.Alpine.html#xRef_"><span class="hs-identifier">xRef_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-ref&quot;</span><span>
+</span><a name="line-168"></a><span>
+</span><a name="line-169"></a><span class="hs-comment">{-
+&lt;input type=&quot;text&quot; x-ref=&quot;content&quot;&gt;
+ 
+&lt;button x-on:click=&quot;navigator.clipboard.writeText($refs.content.value)&quot;&gt;
+  Copy
+&lt;/button&gt;
+-}</span><span>
+</span><a name="line-176"></a><span>
+</span><a name="line-177"></a><span class="hs-comment">-- | x-cloak</span><span>
+</span><a name="line-178"></a><span class="hs-comment">-- Hide a block of HTML until after Alpine is finished initializing its contents</span><span>
+</span><a name="line-179"></a><span class="hs-identifier">xCloak_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-180"></a><a name="xCloak_"><a href="Lucid.Alpine.html#xCloak_"><span class="hs-identifier">xCloak_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-cloak&quot;</span><span> </span><span class="hs-identifier hs-var">mempty</span><span>
+</span><a name="line-181"></a><span>
+</span><a name="line-182"></a><span class="hs-comment">{-
+&lt;div x-cloak&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-187"></a><span>
+</span><a name="line-188"></a><span class="hs-comment">-- | x-ignore</span><span>
+</span><a name="line-189"></a><span class="hs-comment">-- Prevent a block of HTML from being initialized by Alpine</span><span>
+</span><a name="line-190"></a><span class="hs-identifier">xIgnore_</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Attribute</span><span>
+</span><a name="line-191"></a><a name="xIgnore_"><a href="Lucid.Alpine.html#xIgnore_"><span class="hs-identifier">xIgnore_</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">makeAttribute</span><span> </span><span class="hs-string">&quot;data-x-ignore&quot;</span><span> </span><span class="hs-identifier hs-var">mempty</span><span>
+</span><a name="line-192"></a><span>
+</span><a name="line-193"></a><span class="hs-comment">{-
+&lt;div x-ignore&gt;
+  ...
+&lt;/div&gt;
+-}</span><span>
+</span><a name="line-198"></a></pre></body></html>
