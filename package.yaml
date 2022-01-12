@@ -1,5 +1,5 @@
 name:                lucid-alpine
-version:             0.1.0.0
+version:             0.1.0.5
 github:              "WaviLabs/lucid-alpine"
 license:             BSD3
 author:              "Wavi Labs LLC"
@@ -21,7 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/Wavi
 
 dependencies:
 - base >= 4.7 && < 5
-- lucid
+- lucid >= 2.11.0
 - text
 
 library:

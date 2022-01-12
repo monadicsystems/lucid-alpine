@@ -40,7 +40,8 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-# extra-deps: []
+extra-deps:
+- lucid-2.11.0@sha256:1835166fe73a505a6b761fdf1d9aebaf62dce706a5c7d1d4ef2c45eb63cf202a,3212
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
