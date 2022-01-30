@@ -1,9 +1,29 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE LambdaCase #-}
 
-module Lucid.Alpine where
+module Lucid.Alpine
+  ( xData_,
+    xBind_,
+    xHtml_,
+    xCloak_,
+    xEffect_,
+    xFor_,
+    xForKey_,
+    xIf_,
+    xIgnore_,
+    xInit_,
+    xModel_,
+    xOn_,
+    xRef_,
+    xShow_,
+    xText_,
+    xTransition_,
+    useAlpine,
+    useAlpineVersion,
+  )
+where
 
-import Data.Text
+import Data.Text (Text, intercalate, pack)
+import Lucid (Html, HtmlT, defer_, script_, src_)
 import Lucid.Base (Attribute, makeAttribute)
 
 -- | x-data
@@ -19,10 +39,11 @@ xData_ = makeAttribute "x-data"
 
 -- | x-bind
 -- Dynamically set HTML attributes on an element
-xBind_
-  :: Text -- ^ Attribute name
-  -> Text
-  -> Attribute
+xBind_ ::
+  -- | Attribute name
+  Text ->
+  Text ->
+  Attribute
 xBind_ attr = makeAttribute ("x-bind:" <> attr)
 
 {-
@@ -33,10 +54,11 @@ xBind_ attr = makeAttribute ("x-bind:" <> attr)
 
 -- | x-on
 -- Listen for browser events on an element
-xOn_
-  :: Text -- ^ Event name
-  -> Text
-  -> Attribute
+xOn_ ::
+  -- | Event name
+  Text ->
+  Text ->
+  Attribute
 xOn_ event = makeAttribute ("x-on:" <> event)
 
 {-
@@ -71,18 +93,19 @@ xHtml_ = makeAttribute "x-html"
 
 -- | x-model
 -- Synchronize a piece of data with an input element
-xModel_
-  :: [Text] -- ^ List of x-model modifiers
-  -> Text
-  -> Attribute
+xModel_ ::
+  -- | List of x-model modifiers
+  [Text] ->
+  Text ->
+  Attribute
 xModel_ mods = case mods of
   [] -> makeAttribute "x-model"
-  _  -> makeAttribute ("x-model." <> intercalate "." mods)
+  _ -> makeAttribute ("x-model." <> intercalate "." mods)
 
 {-
 <div x-data="{ search: '' }">
   <input type="text" x-model="search">
- 
+
   Searching for: <span x-text="search"></span>
 </div>
 -}
@@ -100,11 +123,13 @@ xShow_ = makeAttribute "x-show"
 
 -- | x-transition
 -- Transition an element in and out using CSS transitions
-xTransition_
-  :: Maybe Text -- ^ Transition directive
-  -> [Text]     -- ^ List of x-transition modifiers
-  -> Text
-  -> Attribute
+xTransition_ ::
+  -- | Transition directive
+  Maybe Text ->
+  -- | List of x-transition modifiers
+  [Text] ->
+  Text ->
+  Attribute
 xTransition_ Nothing [] _ = makeAttribute "x-transition" mempty -- No directive or modifiers
 xTransition_ (Just dir) [] attrVal = makeAttribute ("x-transition:" <> dir) attrVal -- Directive with custom transition classes
 xTransition_ Nothing mods _ = makeAttribute ("x-transition." <> intercalate "." mods) mempty -- No directive, but with modifiers
@@ -166,7 +191,7 @@ xRef_ = makeAttribute "x-ref"
 
 {-
 <input type="text" x-ref="content">
- 
+
 <button x-on:click="navigator.clipboard.writeText($refs.content.value)">
   Copy
 </button>
@@ -193,3 +218,27 @@ xIgnore_ = makeAttribute "x-ignore" mempty
   ...
 </div>
 -}
+
+-- | Use this value in your @head_@ tag to use Alpine.js in your lucid templates
+useAlpine :: Monad m => HtmlT m ()
+useAlpine = script_ [defer_ "", src_ alpineSrc] ("" :: Html ())
+
+-- | Choose the version of Alpine.js to use using a 3-tuple representing semantic versioning
+useAlpineVersion :: Monad m => (Int, Int, Int) -> HtmlT m ()
+useAlpineVersion semVer = script_ [defer_ "", src_ $ alpineSrcWithSemVer semVer] ("" :: Html ())
+
+alpineSrc :: Text
+alpineSrc = "https://unpkg.com/alpinejs"
+
+alpineSrcWithSemVer :: (Int, Int, Int) -> Text
+alpineSrcWithSemVer (major, minor, patch) =
+  alpineSrc
+    <> "@"
+    <> showT major
+    <> "."
+    <> showT minor
+    <> "."
+    <> showT patch
+
+showT :: Show a => a -> Text
+showT = pack . show

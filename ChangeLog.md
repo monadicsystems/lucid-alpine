@@ -19,3 +19,11 @@ Remove "data-" prefix from Alpine.js attributes
 ## 0.1.0.5
 
 Depend on `lucid-2.11.0`
+
+## 0.1.0.6
+
+Add helpers for importing Alpine.js script
+
+## 0.1.0.7
+
+Export explicitly
